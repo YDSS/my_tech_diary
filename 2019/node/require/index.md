@@ -1,5 +1,7 @@
 # node require mechanism
 
+![img](./img/runtime_flow.jpg)
+
 1.  find path(four ways, closest to farest)
     1. if it's a internal module like "http", return cache
     2. with relative or absolute path, get the absolute path by its parent's path, then there're two situations
@@ -45,7 +47,15 @@
 
     Requiring a module which is not in the cache, we need load it from disk:
         
-        1. get the filepath of this module
-        2. fs.readFileSync to get code of this module
-        3. wrapper it with `(function (module, exports, require)) {})`
-        4. exec it, and put module.exports into cache, then return exports
+    1. get the filepath of this module
+    2. fs.readFileSync to get code of this module
+    3. wrapper it with:
+
+        ```js
+        (function (exports, require, module, __filename, __dirname) {
+        // 模块源码
+        });
+        ```
+        
+        `require` function, `module` are all from global, which is generate before apply it, and the source code of a module is just to generate module's exports. 
+    4. exec it, and put module.exports into cache, then return exports
