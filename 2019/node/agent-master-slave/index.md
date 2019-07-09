@@ -12,3 +12,9 @@ Problems:
 
 1. Does eggjs use `cluster` module directly for it's multi-process model?
 2. if 1 is true, how bad is **Roud-Roubin** as load balance algorithem when handle tasks takes quite differet time costs?
+
+**Round-Roubin**
+
+Slicing a process by constant time, when a process exhausts its time slice but not finished, make it enqueue, and dequeue a process, execute it. if new process comes , make it enqueue too.
+
+[detail](https://blog.csdn.net/ytdxyhz/article/details/52760960)
