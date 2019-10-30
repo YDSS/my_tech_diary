@@ -10,7 +10,11 @@
 - explicit `intent` and implicit `intent`
 - How to express `layout` in XML? What's different between android(XML) and Web(HTML)
 - What is `Adapter`
+
+    Adapter is a bridge between `data model` and `view`
 - animation
+- what is the `LayoutInflater` used for?
+- `LayoutManager`
 
 ## Activity
 
@@ -56,6 +60,9 @@
     - `./layout` store layout files
     - `./drawable` store image files with different definitio
 
+    localize
+
+    set localize will automatically create `values` with prefix of specific language
 
 ### Lifecycle
 
@@ -102,17 +109,87 @@ bundle.putInt('key', 1);
 
 ## Intent
 
-- `public Intent(Context packageContext, Class<T> activityCls)`
-- `public Intent putExtra(string key, <T> val)` 
-- startActivity(Context packageContext, Class activityCls)
+`./intent.md`
 
-ActivityManager
+### explicit intent and implicit intent
 
-- startActivityForResult(Context packageContext, Class activityCls, int requestCode)
-- setResult(int result, Intent data)
-- onActivityResult(int requestCode, int resultCode, intent data)
+explicit intent need the class of **target** activity 
+
+implicit intent only need the intent info(uri, action ...).
+implicit intent need the target activity declare it in the xml, and set the filter condition if it doesn't want 
+every one can invoke it
+
+## take photo
+
+1. get filepath to store the photo
+2. set implicit intent to trigger Photo feature
+
+    action: `MediaStore.ACTION_IMAGE_CAPTURE
+    
+    you can set the output path of image: `intent.putExtra(MediaStore.EXTRA_OUTPUT, pathUri)`
+3. startActivityForResult
+4. get file by `FileProvider`
+5. create a `Bitmap` to display the image
 
 ## Fragment
+
+### Lifecycle
+
+![img](./img/fragment_lifecycle.jpg)
+
+1. hooks of lifecycle is `public`, cause activity which controlls this fragment will invoke them
+2. `onCreateView` not `onCreate` is the hook initializing the fragment
+3. `FragmentManager` and transection
+
+### Fragment argument
+
+fragment can save its own bundle, by `fragment.setArguments(Bundle)`. 
+
+it's not like Bundle when `onCreate`, which is savedInstanceState, will not exist until fragment initilized.
+
+fragment argument can be put when the fragment created, think of the fragment is a function, and fragment argument is the parameter
+
+## RecycleView
+
+1. RecycleView is like infinite list
+2. viewHolder is just a wrapper for view:
+
+    new a viewHolder, just give viewHolder the reference of view
+
+    ```java
+    new viewHolder(View itemView)
+    ```
+
+    and recycleView doesn't touch viewHolder directly, it'll invoke methods of `adapter`
+3. methods in adapter
+    1. `onCreateViewHolder` create **one** viewHolder a time, so it'll invoke many time until recycleView has enough views to display,
+        then it can reuse the views created, like a pool
+    2. `onBindViewHolder(viewHolder, int postion)` when position of recycleView changes, the content of viewHolder will change, invoke this method to update view
+
+        position is adapter postion from `viewholder.getAdapterPosition()`
+4. click event
+    1. let viewHolder implement onClickListener
+    2. then let put the holder to its **itemView**, cause itemView itself is the target the user clicks
+
+## viewPager
+
+viewPager is like carousel
+
+## menu
+
+nothing special
+
+## SQLite
+
+1. SQLite use a single file to store data
+2. it's not a server, just a object read and write a db file
+3. have index
+
+## Async Task
+
+`AsyncTask` class can do it, put async logic like **http request** in it(`doInBackground`), listen `onPostExecute` after it finished
+
+`AsyncTaskLoader` is another way
 
 ## misc
 
