@@ -149,35 +149,16 @@ it's not like Bundle when `onCreate`, which is savedInstanceState, will not exis
 
 fragment argument can be put when the fragment created, think of the fragment is a function, and fragment argument is the parameter
 
-## RecycleView
+## Looper && handler
 
-1. RecycleView is like infinite list
-2. viewHolder is just a wrapper for view:
+Looper is like `event loop` in js, but android supports **multiple-thread**, and **every thread has a looper**
 
-    new a viewHolder, just give viewHolder the reference of view
+we can create a thread by extends `HandlerThread`, and it has a looper and a `message queue`. message queue stores messages send to this handler, looper will take m
 
-    ```java
-    new viewHolder(View itemView)
-    ```
+essages from queue when it idles
 
-    and recycleView doesn't touch viewHolder directly, it'll invoke methods of `adapter`
-3. methods in adapter
-    1. `onCreateViewHolder` create **one** viewHolder a time, so it'll invoke many time until recycleView has enough views to display,
-        then it can reuse the views created, like a pool
-    2. `onBindViewHolder(viewHolder, int postion)` when position of recycleView changes, the content of viewHolder will change, invoke this method to update view
-
-        position is adapter postion from `viewholder.getAdapterPosition()`
-4. click event
-    1. let viewHolder implement onClickListener
-    2. then let put the holder to its **itemView**, cause itemView itself is the target the user clicks
-
-## viewPager
-
-viewPager is like carousel
-
-## menu
-
-nothing special
+main thread also has one looper, cause main thread has many jobs to do, so heavy jobs should not put on main thread.
+you can put a message on main thread by declaring it in main thread.
 
 ## SQLite
 
@@ -190,6 +171,13 @@ nothing special
 `AsyncTask` class can do it, put async logic like **http request** in it(`doInBackground`), listen `onPostExecute` after it finished
 
 `AsyncTaskLoader` is another way
+
+## Shared Preferences
+
+kind like `localStorage` in web
+
+1. store data which can be persistent
+2. global for the whole app
 
 ## misc
 
